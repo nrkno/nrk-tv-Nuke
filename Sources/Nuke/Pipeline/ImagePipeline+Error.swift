@@ -26,6 +26,8 @@ extension ImagePipeline {
         case imageRequestMissing
         /// Image pipeline is invalidated and no requests can be made.
         case pipelineInvalidated
+
+        case cancelled
     }
 }
 
@@ -60,6 +62,8 @@ extension ImagePipeline.Error {
             return "Load image method was called with no image request or no URL."
         case .pipelineInvalidated:
             return "Image pipeline is invalidated and no requests can be made."
+        case .cancelled:
+            return "Image task was cancelled."
         }
     }
 }

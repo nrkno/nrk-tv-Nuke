@@ -210,11 +210,15 @@ public final class ImagePipeline: @unchecked Sendable {
             self?.dispatchCallback(to: callbackQueue) {
                 // The callback-based API guarantees that after cancellation no
                 // event are called on the callback queue.
-                guard task.state != .cancelled else { return }
+                guard task.state != .cancelled else {
+                    completion(.failure(ImagePipeline.Error.cancelled))
+                    return
+                }
                 switch event {
                 case .progress(let value): progress?(nil, value)
                 case .preview(let response): progress?(response, task.currentProgress)
-                case .cancelled: break // The legacy APIs do not send cancellation events
+                case .cancelled: 
+                    completion(.failure(ImagePipeline.Error.cancelled))
                 case .finished(let result):
                     _ = task._setState(.completed) // Important to do it on the callback queue
                     completion(result)
